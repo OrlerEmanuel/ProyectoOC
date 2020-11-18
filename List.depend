@@ -1,0 +1,22 @@
+# depslib dependency file v1.0
+1603756155 source:c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\lista.c
+	"lista.h"
+	<stdio.h>
+	<stdlib.h>
+
+1601565874 c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\lista.h
+
+1603974899 source:c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\main.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"mapeo.h"
+
+1603913577 source:c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\mapeo.c
+	"mapeo.h"
+	<stdio.h>
+	<stdlib.h>
+
+1602960217 c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\mapeo.h
+	"lista.h"
+

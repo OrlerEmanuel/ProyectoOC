@@ -1,0 +1,43 @@
+# depslib dependency file v1.0
+1603994594 source:c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\lista.c
+	"lista.h"
+	<stdio.h>
+	<stdlib.h>
+
+1601565874 c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\lista.h
+
+1603994000 source:c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\mapeo.c
+	"mapeo.h"
+	<stdio.h>
+	<stdlib.h>
+
+1603980486 c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\mapeo.h
+	"lista.h"
+
+1603995337 source:c:\users\emanuel\desktop\segundo cuartimestre 2020\odc\proyectoorga\documentos sobre listas\list\main.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"mapeo.h"
+
+1604017893 source:d:\proyectooc\documentos sobre listas\list\lista.c
+	"lista.h"
+	<stdio.h>
+	<stdlib.h>
+
+1603998947 d:\proyectooc\documentos sobre listas\list\lista.h
+
+1604019990 source:d:\proyectooc\documentos sobre listas\list\main.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"mapeo.h"
+
+1603998947 d:\proyectooc\documentos sobre listas\list\mapeo.h
+	"lista.h"
+
+1604020011 source:d:\proyectooc\documentos sobre listas\list\mapeo.c
+	"mapeo.h"
+	<stdio.h>
+	<stdlib.h>
+
