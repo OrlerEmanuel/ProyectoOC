@@ -34,38 +34,32 @@ void fEliminarC(tClave clave){
 int main(int argc, char *argv[]){
     tMapeo map;
     int opcion;
-    int longitud;
     int retorno = 0;
-    FILE *archivoEsc;
-    FILE *archivoLec;
-    char caracter = ' ';
+    int *cantApariciones;
+    FILE *archivo;
     char argumento[] = "evaluador";
+    char *palabra;
     //if(argc == 3 && strcmp(argv[1],argumento) == 0){
-      //  arhivoEsc = fopen(argv[2],"r");
         //archivoLec= fopen(argv[2],"r");
-        archivoEsc = fopen("prueba.txt","r");
-        archivoLec= fopen("prueba.txt","r");
-        if(archivoEsc != NULL){
+        archivo= fopen("prueba.txt","r");
+        if(archivo != NULL){
             crear_mapeo(&map,10,&hash,&comparador);
-            while(caracter != EOF){
-                int *valor;
-                longitud = 0;
-                while((caracter = fgetc(archivoLec)) != EOF && caracter != ' ')
-                    longitud++;
-                char *palabra = malloc(sizeof(char)*longitud);
-                for(int i=0; i<longitud; i++)
-                    palabra[i] = fgetc(archivoEsc);
-                fgetc(archivoEsc);
-                printf("%s'\n'",palabra);
-                valor = m_recuperar(map, &palabra);
-                if(valor == NULL){
-                    valor = malloc(sizeof(int));
-                    *valor = 1;
+            while (fscanf(archivo,"%49s",palabra) != EOF){
+                cantApariciones = m_recuperar(map, &palabra);
+                if(cantApariciones != NULL){
+                    *cantApariciones = (*cantApariciones) + 1;
                 }
                 else{
-                    *valor = (*valor) + 1;
+                   palabra = malloc(sizeof(char)*longitudMaxima);
+                   cantApariciones = malloc(sizeof(int));
+                   if(palabra != NULL && cantApariciones != NULL){
+                        *cantApariciones = 1;
+                        m_insertar(map,&palabra,cantApariciones);
+                   }
+                   else{
+
+                   }
                 }
-                m_insertar(map,&palabra,valor);
             }
             printf("Seleccione una opcion: '\n'");
             printf("1. Cantidad de apariciones '\n'");
@@ -91,8 +85,7 @@ int main(int argc, char *argv[]){
         else
             retorno = -1;
         printf("%d",retorno);
-        fclose(archivoEsc);
-        fclose(archivoLec);
+        fclose(archivo);
     //}
     //else
        // retorno = -2;

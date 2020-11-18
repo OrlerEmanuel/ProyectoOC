@@ -41,3 +41,18 @@
 	<stdio.h>
 	<stdlib.h>
 
+1605733032 source:d:\proyecto_oc\lista.c
+	"lista.h"
+	<stdio.h>
+	<stdlib.h>
+
+1605733032 d:\proyecto_oc\lista.h
+
+1605733032 source:d:\proyecto_oc\mapeo.c
+	"mapeo.h"
+	<stdio.h>
+	<stdlib.h>
+
+1605733032 d:\proyecto_oc\mapeo.h
+	"lista.h"
+
