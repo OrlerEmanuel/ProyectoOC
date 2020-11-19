@@ -38,17 +38,18 @@ En caso que se excesa del factor de carga la funcion reHash incrementa
 la cantidad de buckets
 **/
 void reHash(tMapeo m){
-    tLista * tabla_Hash = m->tabla_hash;
+    tLista *tabla_Hash = m->tabla_hash;
     tLista  bucket;
-    tLista * nuevaTablaHash = malloc (sizeof(tLista)* m->longitud_tabla);
+    tLista *nuevaTablaHash;
     tPosicion fin;
     tPosicion puntero;
     tEntrada entry;
     int tamanio = m->longitud_tabla;
-    m->longitud_tabla= (m->longitud_tabla)+10;
+    m->longitud_tabla= tamanio*2;
+    nuevaTablaHash = malloc (sizeof(tLista)* m->longitud_tabla);
     if(nuevaTablaHash == NULL)
         exit(MAP_ERROR_MEMORIA);
-    for(int i=0; i<((m)->longitud_tabla) ;i++){
+    for(int i=0; i<(tamanio*2) ;i++){
         crear_lista(&bucket);
         nuevaTablaHash[i]=bucket;
     }
@@ -60,8 +61,7 @@ void reHash(tMapeo m){
             l_eliminar(tabla_Hash[i],puntero,&FalsoEliminarEntrada);
             int hash = m->hash_code(entry->clave) % (m->longitud_tabla);
             bucket = nuevaTablaHash[hash];
-            l_insertar(bucket, l_primera(bucket) , entry );
-            
+            l_insertar(bucket, l_primera(bucket) , entry);
         }
         l_destruir(&tabla_Hash[i],&FalsoEliminarEntrada);
     }
@@ -78,19 +78,17 @@ void reHash(tMapeo m){
 tValor m_insertar(tMapeo m, tClave c, tValor v){
     tValor retorno = NULL;
     tEntrada entry;
-    tEntrada toCompare;
     int encontrado = 1;
     int hash = m->hash_code(c) % (m->longitud_tabla);
     tLista bucket = m->tabla_hash[hash];
     tPosicion puntero = l_primera(bucket);
     tPosicion finLista = l_fin(bucket);
     while(puntero != finLista && encontrado == 1){
-        toCompare = l_recuperar(bucket,puntero);
-        encontrado = m->comparador(toCompare->clave,c);
+        entry = l_recuperar(bucket,puntero);
+        encontrado = m->comparador(entry->clave,c);
         if(encontrado == 1)
             puntero = l_siguiente(bucket,puntero);
         else{
-            entry = l_recuperar(bucket,puntero);
             retorno = entry ->valor;
             entry->valor = v;
         }
