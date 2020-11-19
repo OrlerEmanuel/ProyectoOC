@@ -58,10 +58,11 @@ void reHash(tMapeo m){
         fin = l_fin(tabla_Hash[i]);
         while(puntero != fin){
             entry = l_recuperar(tabla_Hash[i],puntero);
-            l_eliminar(tabla_Hash[i],puntero,&FalsoEliminarEntrada);
             int hash = m->hash_code(entry->clave) % (m->longitud_tabla);
             bucket = nuevaTablaHash[hash];
             l_insertar(bucket, l_primera(bucket) , entry);
+            puntero= l_siguiente(tabla_Hash[i],puntero);
+
         }
         l_destruir(&tabla_Hash[i],&FalsoEliminarEntrada);
     }
