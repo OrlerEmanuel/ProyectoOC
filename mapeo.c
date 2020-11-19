@@ -61,9 +61,9 @@ void reHash(tMapeo m){
             int hash = m->hash_code(entry->clave) % (m->longitud_tabla);
             bucket = nuevaTablaHash[hash];
             l_insertar(bucket, l_primera(bucket) , entry );
-            puntero = l_siguiente(m->tabla_hash[i],puntero);
-            l_destruir(&tabla_Hash[i],&FalsoEliminarEntrada);
+            
         }
+        l_destruir(&tabla_Hash[i],&FalsoEliminarEntrada);
     }
     free(m->tabla_hash);
     m->tabla_hash=nuevaTablaHash;
