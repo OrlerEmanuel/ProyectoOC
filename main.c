@@ -44,25 +44,24 @@ int main(int argc, char *argv[]){
         //archivo= fopen(argv[2],"r");
         archivo= fopen("teamRocketLema.txt","r");
         if(archivo != NULL){
-            crear_mapeo(&map,1000,&hash,&comparador);
+            crear_mapeo(&map,10,&hash,&comparador);
             while (fscanf(archivo,"%s",palabra) != EOF){
                 printf(" la palabra leida es %s \n",palabra);
                 cantApariciones = m_recuperar(map, &palabra);
                 if(cantApariciones != NULL){
                     printf(" modifica valor de '%s', no inserta '\n'",palabra);
                     (*cantApariciones) = (*cantApariciones) + 1;
-                    m_insertar(map,&palabra,cantApariciones);
                     printf("cantidad de apariciones %d '\n'", *cantApariciones);
                 }
                 else{
-                    aInsertar = malloc(sizeof(char)*(longitudMaxima)); //preguntar
+                    aInsertar = malloc(sizeof(char)*(strlen(palabra)+1)); //preguntar
                     cantApariciones = malloc(sizeof(int)); //preguntar
                     strcpy(aInsertar,palabra);
                     printf(" hace los malloc %s '\n'",aInsertar);
                     if(palabra != NULL && cantApariciones != NULL){
                         (*cantApariciones) = 1;
                         printf("cantidad de apariciones %d '\n'", *cantApariciones);
-                        m_insertar(map,&aInsertar,cantApariciones);
+                        m_insertar(map,aInsertar,cantApariciones);
                         printf(" hizo la insercion %s '\n'",aInsertar);
                     }
                     else{
@@ -78,7 +77,7 @@ int main(int argc, char *argv[]){
             while(opcion == 1){
                 printf("Ingrese la palabra de la cual desea saber su cantidad de aparaciones '\n'");
                 fflush(stdin);
-                scanf("%'\n'",&aBuscar);
+                scanf("%s'\n'",aBuscar);
                 cantidad = m_recuperar(map,&aBuscar);
                 if(cantidad != NULL)
                     printf("La cantidad de aparaciones de %s es de %d",aBuscar,(*cantidad));

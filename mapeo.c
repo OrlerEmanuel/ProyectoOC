@@ -98,10 +98,10 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
         entry = (tEntrada) malloc(sizeof(struct entrada));
         entry->clave = c;
         entry-> valor = v;
-        l_insertar(bucket, l_ultima(bucket) , entry );
+        l_insertar(bucket, l_primera(bucket) , entry );
         m->cantidad_elementos++;
     }
-    if(m->cantidad_elementos/m->longitud_tabla > 0.75)
+    if(((float)m->cantidad_elementos)/m->longitud_tabla > 0.75)
         reHash(m);
     return retorno;
 }

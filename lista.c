@@ -111,11 +111,9 @@ tPosicion l_anterior(tLista l, tPosicion p){
 **/
 tPosicion l_ultima(tLista l){
     tPosicion current = l;
-    int found = current->siguiente == NULL;
-    while(!found){
-        current = current->siguiente;
-        found = current->siguiente->siguiente == NULL;
-    }
+    if(current->siguiente != NULL)
+        while(current->siguiente->siguiente != NULL)
+            current = current->siguiente;
     return current;
 }
 
