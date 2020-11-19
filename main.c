@@ -39,6 +39,7 @@ int main(int argc, char *argv[]){
     char aBuscar [longitudMaxima];
     char argumento[] = "evaluador";
     char palabra[longitudMaxima];
+    char* pepito;
     //if(argc == 3 && strcmp(argv[1],argumento) == 0){
         //archivoLec= fopen(argv[2],"r");
         archivo= fopen("teamRocketLema.txt","r");
@@ -52,13 +53,15 @@ int main(int argc, char *argv[]){
                     *cantApariciones = (*cantApariciones) + 1;
                 }
                 else{
-                    palabra[0] = malloc(sizeof(char)*longitudMaxima);
+                    pepito = malloc(sizeof(char)*(longitudMaxima));
                     cantApariciones = malloc(sizeof(int));
-                    printf(" hace los malloc '\n'",palabra);
+                    for(int i=0; i<longitudMaxima;i++)
+                        *(pepito+i)=palabra[i];
+                    printf(" hace los malloc %s '\n'",pepito);
                     if(palabra != NULL && cantApariciones != NULL){
                         *cantApariciones = 1;
                         m_insertar(map,&palabra,cantApariciones);
-                        printf(" hizo la insercion '\n'",palabra);
+                        printf(" hizo la insercion %s '\n'",palabra);
                     }
                     else{
                         printf(" no reserva espacio '\n'");

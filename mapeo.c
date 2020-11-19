@@ -1,6 +1,7 @@
 #include "mapeo.h"
 #include <stdio.h>
 #include <stdlib.h>
+
 /**
  Inicializa un mapeo vacio, con capacidad inicial igual al MAX(10, CI).
  Una referencia al mapeo creado es referenciada en *M.
@@ -23,51 +24,49 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
     for(int i=0; i<((*m)->longitud_tabla);i++){
         crear_lista(& bucket);
         (*m)->tabla_hash[i]=bucket;
-        }
-
+    }
 }
+
 /**
 Procedimiento vacio, no tiene ningun efecto.
 **/
 void FalsoEliminarEntrada(void * entry){};
+
 /**
 En caso que se excesa del factor de carga la funcion reHash incrementa
 la cantidad de buckets
 **/
 void reHash(tMapeo m){
     tLista * tabla_Hash = m->tabla_hash;
-    int tamanio= m->longitud_tabla;
-    m->longitud_tabla= (m->longitud_tabla)+10;
+    tLista  bucket;
     tLista * nuevaTablaHash = malloc (sizeof(tLista)* m->longitud_tabla);
+    tPosicion fin;
+    tPosicion puntero;
+    tEntrada entry;
+    int tamanio = m->longitud_tabla;
+    m->longitud_tabla= (m->longitud_tabla)+10;
     if(nuevaTablaHash == NULL)
         exit(MAP_ERROR_MEMORIA);
-    tLista  bucket;
-    for(int i=0; i<((m)->longitud_tabla);i++){
+    for(int i=0; i<((m)->longitud_tabla) ;i++){
         crear_lista(&bucket);
         nuevaTablaHash[i]=bucket;
     }
-    tPosicion fin;
     for(int i=0; i<tamanio ; i++){
-        tPosicion puntero= l_primera(tabla_Hash[i]);
-        fin=l_fin(tabla_Hash[i]);
+        puntero= l_primera(tabla_Hash[i]);
+        fin = l_fin(tabla_Hash[i]);
         while(puntero != fin){
-            tEntrada entry= l_recuperar(tabla_Hash[i],puntero);
+            entry = l_recuperar(tabla_Hash[i],puntero);
             l_eliminar(tabla_Hash[i],puntero,&FalsoEliminarEntrada);
-            int hash =m->hash_code(entry->clave) % (m->longitud_tabla);
-            tLista bucket= nuevaTablaHash[hash];
+            int hash = m->hash_code(entry->clave) % (m->longitud_tabla);
+            bucket = nuevaTablaHash[hash];
             l_insertar(bucket, l_primera(bucket) , entry );
-            puntero= l_siguiente(m->tabla_hash[i],puntero);
+            puntero = l_siguiente(m->tabla_hash[i],puntero);
             l_destruir(&tabla_Hash[i],&FalsoEliminarEntrada);
-
         }
-
     }
     free(m->tabla_hash);
     m->tabla_hash=nuevaTablaHash;
-
-
 }
-
 
 /**
  Inserta una entrada con clave C y valor V, en M.
@@ -76,35 +75,33 @@ void reHash(tMapeo m){
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
 tValor m_insertar(tMapeo m, tClave c, tValor v){
-    tValor retorno=NULL;
-    int hash =m->hash_code(c) % (m->longitud_tabla);
-    tLista bucket= m->tabla_hash[hash];
-    tPosicion puntero= l_primera(bucket);
-    tPosicion finLista=l_fin(bucket);
+    tValor retorno = NULL;
+    tEntrada entry;
     int encontrado = 1;
-    if(puntero != finLista)
-       encontrado= m->comparador(l_recuperar(bucket,puntero),c);
-    while(puntero!= finLista && encontrado == 1){
-        puntero= l_siguiente(bucket,puntero);
+    int hash = m->hash_code(c) % (m->longitud_tabla);
+    tLista bucket = m->tabla_hash[hash];
+    tPosicion puntero = l_primera(bucket);
+    tPosicion finLista = l_fin(bucket);
+    while(puntero != finLista && encontrado == 1){
         encontrado = m->comparador(l_recuperar(bucket,puntero),c);
-        }
-    if(encontrado==1){
-        tEntrada Entry = (tEntrada) malloc(sizeof(struct entrada));
-        Entry->clave=c;
-        Entry-> valor=v;
-        l_insertar(bucket, l_ultima(bucket) , Entry );
-        m->cantidad_elementos++;
-        }
+        if(encontrado == 1)
+            puntero = l_siguiente(bucket,puntero);
         else{
-            tEntrada entrada = l_recuperar(bucket,puntero);
-            retorno=entrada ->valor;
-            l_insertar(bucket,puntero,v);
+            entry = l_recuperar(bucket,puntero);
+            retorno = entry ->valor;
+            entry->valor = v;
         }
-        if(m->cantidad_elementos/m->longitud_tabla > 0.75)
-            reHash(m);
+    }
+    if(encontrado == 1){
+        entry = (tEntrada) malloc(sizeof(struct entrada));
+        entry->clave = c;
+        entry-> valor = v;
+        l_insertar(bucket, l_ultima(bucket) , entry );
+        m->cantidad_elementos++;
+    }
+    if(m->cantidad_elementos/m->longitud_tabla > 0.75)
+        reHash(m);
     return retorno;
-
-
 }
 
 /**
@@ -114,33 +111,32 @@ void eliminarEntrada(void *  entry){
     tEntrada entrada = (tEntrada) entry;
     free(entrada);
 }
+
 /**
  Elimina la entrada con clave C en M, si esta existe.
  La clave y el valor de la entrada son eliminados mediante las funciones fEliminarC y fEliminarV.
 **/
-
 void m_eliminar(tMapeo m, tClave c, void (*fEliminarC)(void *), void (*fEliminarV)(void *)){
-    int hash =m->hash_code(c) % (m->longitud_tabla);
-    tLista bucket= m->tabla_hash[hash];
-    tPosicion puntero= l_primera(bucket);
-    tPosicion finLista=l_fin(bucket);
+    int hash = m->hash_code(c) % (m->longitud_tabla);
+    tLista bucket = m->tabla_hash[hash];
+    tPosicion puntero = l_primera(bucket);
+    tPosicion finLista = l_fin(bucket);
+    tEntrada entry;
     int encontrado = 1;
     if(puntero != finLista)
-       encontrado= m->comparador(l_recuperar(bucket,puntero),c);
-    while(puntero!= finLista && encontrado == 1){
-        puntero= l_siguiente(bucket,puntero);
+       encontrado = m->comparador(l_recuperar(bucket,puntero),c);
+    while(puntero != finLista && encontrado == 1){
+        puntero = l_siguiente(bucket,puntero);
         encontrado = m->comparador(l_recuperar(bucket,puntero),c);
-        }
+    }
     if(encontrado==1){
-        tEntrada entry= l_recuperar(bucket,puntero);
+        entry = l_recuperar(bucket,puntero);
         fEliminarC(entry->clave);
         fEliminarV(entry->valor);
         l_eliminar(bucket,puntero, &eliminarEntrada);
         m->cantidad_elementos--;
     }
-
 }
-
 
 /**
  Destruye el mapeo M, elimininando cada una de sus entradas.
@@ -148,50 +144,44 @@ void m_eliminar(tMapeo m, tClave c, void (*fEliminarC)(void *), void (*fEliminar
 **/
 void m_destruir(tMapeo * m, void (*fEliminarC)(void *), void (*fEliminarV)(void *)){
     tLista * tabla_Hash = (*m)->tabla_hash;
-    int tamanio= (*m)->longitud_tabla;
+    int tamanio = (*m)->longitud_tabla;
     tEntrada entry;
     tPosicion puntero;
     for(int i=0; i<tamanio ; i++){
         puntero= l_primera(tabla_Hash[i]);
         while(l_longitud(tabla_Hash[i])!=0){
-            entry= l_recuperar(tabla_Hash[i],puntero);
+            entry = l_recuperar(tabla_Hash[i],puntero);
             fEliminarC(entry->valor);
             fEliminarV(entry->clave);
             l_eliminar(tabla_Hash[i],puntero,&eliminarEntrada);
-
         }
         l_destruir(&tabla_Hash[i],&eliminarEntrada);
     }
     free(tabla_Hash);
     free(*m);
-
 }
-
 
 /**
  Recupera el valor correspondiente a la entrada con clave C en M, si esta existe.
  Retorna el valor correspondiente, o NULL en caso contrario.
 **/
-
 tValor m_recuperar(tMapeo m, tClave c){
-    tValor retorno=NULL;
-    int hash =m->hash_code(c) % (m->longitud_tabla);
-    tLista bucket= m->tabla_hash[hash];
-    tPosicion puntero= l_primera(bucket);
-    tPosicion finLista=l_fin(bucket);
-    int encontrado = 1;
+    tValor retorno = NULL;
     tEntrada entry;
-    if(puntero != finLista)
-        entry=l_recuperar(bucket,puntero);
-       encontrado= m->comparador(entry->clave,c);
-    while(puntero!= finLista && encontrado == 1){
-        puntero= l_siguiente(bucket,puntero);
-        entry=l_recuperar(bucket,puntero);
-        encontrado= m->comparador(entry->clave,c);
-    }
-    if(encontrado!=1){
-        tEntrada entrada= l_recuperar(bucket,puntero);
-        retorno= entrada->valor;
+    int encontrado = 1;
+    int hash = m->hash_code(c) % (m->longitud_tabla);
+    tLista bucket = m->tabla_hash[hash];
+    tPosicion puntero = l_primera(bucket);
+    tPosicion finLista =l_fin(bucket);
+    while(puntero != finLista && encontrado == 1){
+        entry = l_recuperar(bucket,puntero);
+        encontrado = m->comparador(entry->clave,c);
+        if(encontrado == 1)
+            puntero = l_siguiente(bucket,puntero);
+        else{
+            entry = l_recuperar(bucket,puntero);
+            retorno = entry->valor;
+        }
     }
     return retorno;
 }
