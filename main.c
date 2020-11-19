@@ -35,44 +35,40 @@ int main(int argc, char *argv[]){
     int retorno = 0;
     int *cantidad;
     int *cantApariciones;
-    int finDeArchivo = 0;
     FILE *archivo;
     char aBuscar [longitudMaxima];
     char argumento[] = "evaluador";
     char palabra[longitudMaxima];
+    char *aInsertar;
     //if(argc == 3 && strcmp(argv[1],argumento) == 0){
         //archivo= fopen(argv[2],"r");
         archivo= fopen("teamRocketLema.txt","r");
         if(archivo != NULL){
             crear_mapeo(&map,1000,&hash,&comparador);
-            while (!finDeArchivo){
-                palabra[0] = malloc(sizeof(char)*(longitudMaxima));
-                if(fscanf(archivo,"%s",palabra)!=EOF){
-                    printf(" la palabra leida es %s \n",palabra);
-                    cantApariciones = m_recuperar(map, &palabra);
-                    if(cantApariciones != NULL){
-                        printf(" modifica valor de '%s', no inserta '\n'",palabra);
-                        (*cantApariciones) = (*cantApariciones) + 1;
-                        m_insertar(map,&palabra,cantApariciones);
-                        free(palabra);
+            while (fscanf(archivo,"%s",palabra) != EOF){
+                printf(" la palabra leida es %s \n",palabra);
+                cantApariciones = m_recuperar(map, &palabra);
+                if(cantApariciones != NULL){
+                    printf(" modifica valor de '%s', no inserta '\n'",palabra);
+                    (*cantApariciones) = (*cantApariciones) + 1;
+                    m_insertar(map,&palabra,cantApariciones);
+                    printf("cantidad de apariciones %d '\n'", *cantApariciones);
+                }
+                else{
+                    aInsertar = malloc(sizeof(char)*(longitudMaxima)); //preguntar
+                    cantApariciones = malloc(sizeof(int)); //preguntar
+                    strcpy(aInsertar,palabra);
+                    printf(" hace los malloc %s '\n'",aInsertar);
+                    if(palabra != NULL && cantApariciones != NULL){
+                        (*cantApariciones) = 1;
                         printf("cantidad de apariciones %d '\n'", *cantApariciones);
+                        m_insertar(map,&aInsertar,cantApariciones);
+                        printf(" hizo la insercion %s '\n'",aInsertar);
                     }
                     else{
-                        cantApariciones = malloc(sizeof(int)); //preguntar
-                        printf(" hace los malloc %s '\n'",palabra);
-                        if(palabra != NULL && cantApariciones != NULL){
-                            (*cantApariciones) = 1;
-                            printf("cantidad de apariciones %d '\n'", *cantApariciones);
-                            m_insertar(map,&aInsertar,cantApariciones);
-                            printf(" hizo la insercion %s '\n'",aInsertar);
-                        }
-                        else{
-                            printf(" no reserva espacio '\n'");
-                        }
+                        printf(" no reserva espacio '\n'");
                     }
                 }
-                else
-                    finDeArchivo = 1;
             }
             fclose(archivo);
             printf("Seleccione una opcion: '\n'");
@@ -81,6 +77,7 @@ int main(int argc, char *argv[]){
             scanf("%d",&opcion);
             while(opcion == 1){
                 printf("Ingrese la palabra de la cual desea saber su cantidad de aparaciones '\n'");
+                fflush(stdin);
                 scanf("%'\n'",&aBuscar);
                 cantidad = m_recuperar(map,&aBuscar);
                 if(cantidad != NULL)
@@ -90,6 +87,7 @@ int main(int argc, char *argv[]){
                 printf("Seleccione una opcion: '\n'");
                 printf("1. Cantidad de apariciones '\n'");
                 printf("2. Salir '\n'");
+                fflush(stdin);
                 scanf("%d",&opcion);
             }
             m_destruir(&map,&fEliminarC,&fEliminarV);
