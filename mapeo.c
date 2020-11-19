@@ -1,4 +1,5 @@
 #include "mapeo.h"
+#include "lista.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -77,13 +78,15 @@ void reHash(tMapeo m){
 tValor m_insertar(tMapeo m, tClave c, tValor v){
     tValor retorno = NULL;
     tEntrada entry;
+    tEntrada toCompare;
     int encontrado = 1;
     int hash = m->hash_code(c) % (m->longitud_tabla);
     tLista bucket = m->tabla_hash[hash];
     tPosicion puntero = l_primera(bucket);
     tPosicion finLista = l_fin(bucket);
     while(puntero != finLista && encontrado == 1){
-        encontrado = m->comparador(l_recuperar(bucket,puntero),c);
+        toCompare = l_recuperar(bucket,puntero);
+        encontrado = m->comparador(toCompare->clave,c);
         if(encontrado == 1)
             puntero = l_siguiente(bucket,puntero);
         else{
