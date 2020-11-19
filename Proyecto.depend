@@ -48,11 +48,18 @@
 
 1605733032 d:\proyecto_oc\lista.h
 
-1605733032 source:d:\proyecto_oc\mapeo.c
+1605748222 source:d:\proyecto_oc\mapeo.c
 	"mapeo.h"
 	<stdio.h>
 	<stdlib.h>
 
 1605733032 d:\proyecto_oc\mapeo.h
 	"lista.h"
+
+1605747863 source:d:\proyecto_oc\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"lista.h"
+	"mapeo.h"
 

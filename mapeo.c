@@ -192,7 +192,7 @@ tValor m_recuperar(tMapeo m, tClave c){
         puntero= l_siguiente(bucket,puntero);
         entry=l_recuperar(bucket,puntero);
         encontrado= m->comparador(entry->clave,c);
-        }
+    }
     if(encontrado!=0){
         tEntrada entrada= l_recuperar(bucket,puntero);
         retorno= entrada->valor;
