@@ -59,8 +59,7 @@ void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
         free(toRemove);
         toRemove = first->siguiente;
     }
-    free(l);
-    (*l) = NULL;
+    free(*l);
 }
 
  /**
