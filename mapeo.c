@@ -18,7 +18,7 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
     (*m)->longitud_tabla = ci>10?ci:10;
     (*m)->comparador = fComparacion;
     (*m)->hash_code = fHash;
-    (*m)-> tabla_hash = malloc(sizeof(tLista) * (*m)->longitud_tabla);
+    (*m)->tabla_hash = (tLista *) malloc(sizeof(tLista) * (*m)->longitud_tabla);
     if((*m)-> tabla_hash == NULL)
         exit(MAP_ERROR_MEMORIA);
     tLista bucket;
