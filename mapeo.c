@@ -11,6 +11,7 @@
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
 void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(void *, void *)){
+    tLista bucket;
     *m = (tMapeo) malloc(sizeof(struct mapeo));
     if((*m) == NULL)
         exit(MAP_ERROR_MEMORIA);
@@ -19,9 +20,10 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
     (*m)->comparador = fComparacion;
     (*m)->hash_code = fHash;
     (*m)->tabla_hash = (tLista *) malloc(sizeof(tLista) * (*m)->longitud_tabla);
+
     if((*m)-> tabla_hash == NULL)
         exit(MAP_ERROR_MEMORIA);
-    tLista bucket;
+
     for(int i=0; i<((*m)->longitud_tabla);i++){
         crear_lista(& bucket);
         (*m)->tabla_hash[i]=bucket;
@@ -31,7 +33,7 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
 /**
 Procedimiento vacio, no tiene ningun efecto.
 **/
-void FalsoEliminarEntrada(void * entry){};
+void falsoEliminarEntrada(void * entry){};
 
 /**
 En caso que se excesa del factor de carga la funcion reHash incrementa
@@ -44,30 +46,33 @@ void reHash(tMapeo m){
     tPosicion fin;
     tPosicion puntero;
     tEntrada entry;
+    int hash;
     int tamanio = m->longitud_tabla;
-    m->longitud_tabla= tamanio*2;
+    m->longitud_tabla = tamanio*2;
     nuevaTablaHash = malloc (sizeof(tLista)* m->longitud_tabla);
+
     if(nuevaTablaHash == NULL)
         exit(MAP_ERROR_MEMORIA);
+
     for(int i=0; i<(tamanio*2) ;i++){
         crear_lista(&bucket);
-        nuevaTablaHash[i]=bucket;
+        nuevaTablaHash[i] = bucket;
     }
+
     for(int i=0; i<tamanio ; i++){
-        puntero= l_primera(tabla_Hash[i]);
+        puntero = l_primera(tabla_Hash[i]);
         fin = l_fin(tabla_Hash[i]);
         while(puntero != fin){
             entry = l_recuperar(tabla_Hash[i],puntero);
-            int hash = m->hash_code(entry->clave) % (m->longitud_tabla);
+            hash = m->hash_code(entry->clave) % (m->longitud_tabla);
             bucket = nuevaTablaHash[hash];
             l_insertar(bucket, l_primera(bucket) , entry);
-            puntero= l_siguiente(tabla_Hash[i],puntero);
-
+            puntero = l_siguiente(tabla_Hash[i],puntero);
         }
-        l_destruir(&tabla_Hash[i],&FalsoEliminarEntrada);
+        l_destruir(&tabla_Hash[i],&falsoEliminarEntrada);
     }
     free(m->tabla_hash);
-    m->tabla_hash=nuevaTablaHash;
+    m->tabla_hash = nuevaTablaHash;
 }
 
 /**
@@ -84,6 +89,7 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
     tLista bucket = m->tabla_hash[hash];
     tPosicion puntero = l_primera(bucket);
     tPosicion finLista = l_fin(bucket);
+
     while(puntero != finLista && encontrado == 1){
         entry = l_recuperar(bucket,puntero);
         encontrado = m->comparador(entry->clave,c);
@@ -94,6 +100,7 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
             entry->valor = v;
         }
     }
+
     if(encontrado == 1){
         entry = (tEntrada) malloc(sizeof(struct entrada));
         entry->clave = c;
@@ -125,12 +132,13 @@ void m_eliminar(tMapeo m, tClave c, void (*fEliminarC)(void *), void (*fEliminar
     tPosicion finLista = l_fin(bucket);
     tEntrada entry;
     int encontrado = 1;
-    if(puntero != finLista)
-       encontrado = m->comparador(l_recuperar(bucket,puntero),c);
+
     while(puntero != finLista && encontrado == 1){
-        puntero = l_siguiente(bucket,puntero);
         encontrado = m->comparador(l_recuperar(bucket,puntero),c);
+        if(encontrado == 1)
+            puntero = l_siguiente(bucket,puntero);
     }
+
     if(encontrado==1){
         entry = l_recuperar(bucket,puntero);
         fEliminarC(entry->clave);
@@ -149,9 +157,10 @@ void m_destruir(tMapeo * m, void (*fEliminarC)(void *), void (*fEliminarV)(void 
     int tamanio = (*m)->longitud_tabla;
     tEntrada entry;
     tPosicion puntero;
+
     for(int i=0; i<tamanio ; i++){
-        puntero= l_primera(tabla_Hash[i]);
-        while(l_longitud(tabla_Hash[i])!=0){
+        puntero = l_primera(tabla_Hash[i]);
+        while(l_longitud(tabla_Hash[i])!= 0){
             entry = l_recuperar(tabla_Hash[i],puntero);
             fEliminarC(entry->valor);
             fEliminarV(entry->clave);
@@ -159,8 +168,16 @@ void m_destruir(tMapeo * m, void (*fEliminarC)(void *), void (*fEliminarV)(void 
         }
         l_destruir(&tabla_Hash[i],&eliminarEntrada);
     }
-    free(tabla_Hash);
+
+    (*m)->cantidad_elementos = 0;
+    (*m)->longitud_tabla = 0;
+    (*m)->comparador = NULL;
+    (*m)->hash_code = NULL;
+
+    free((*m)->tabla_hash);
+    (*m)->tabla_hash = NULL;
     free(*m);
+    (*m) = NULL;
 }
 
 /**
@@ -174,7 +191,8 @@ tValor m_recuperar(tMapeo m, tClave c){
     int hash = m->hash_code(c) % (m->longitud_tabla);
     tLista bucket = m->tabla_hash[hash];
     tPosicion puntero = l_primera(bucket);
-    tPosicion finLista =l_fin(bucket);
+    tPosicion finLista = l_fin(bucket);
+
     while(puntero != finLista && encontrado == 1){
         entry = l_recuperar(bucket,puntero);
         encontrado = m->comparador(entry->clave,c);
