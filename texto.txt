@@ -1,0 +1,4 @@
+buenas tardes este archivo de texto
+es para verificar que funciona correctamente este texto
+y ademas es para ver si funciona correctamente el programa
+del proyecto de orga y que anda

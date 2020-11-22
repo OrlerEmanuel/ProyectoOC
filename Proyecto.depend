@@ -41,14 +41,14 @@
 	<stdio.h>
 	<stdlib.h>
 
-1605818414 source:d:\proyecto_oc\lista.c
+1605904499 source:d:\proyecto_oc\lista.c
 	"lista.h"
 	<stdio.h>
 	<stdlib.h>
 
 1605733032 d:\proyecto_oc\lista.h
 
-1605818679 source:d:\proyecto_oc\mapeo.c
+1605904441 source:d:\proyecto_oc\mapeo.c
 	"mapeo.h"
 	"lista.h"
 	<stdio.h>
@@ -57,7 +57,7 @@
 1605733032 d:\proyecto_oc\mapeo.h
 	"lista.h"
 
-1605818872 source:d:\proyecto_oc\main.c
+1606014288 source:d:\proyecto_oc\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

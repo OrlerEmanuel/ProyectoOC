@@ -187,6 +187,3 @@ tValor m_recuperar(tMapeo m, tClave c){
     }
     return retorno;
 }
-
-
-

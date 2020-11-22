@@ -60,6 +60,7 @@ void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
         toRemove = first->siguiente;
     }
     free(*l);
+    (*l) = NULL;
 }
 
  /**
